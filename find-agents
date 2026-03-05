@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Find Agents</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0b1d3a;
+color:white;
+}
+
+nav{
+display:flex;
+justify-content:space-between;
+padding:20px 60px;
+background:#08152b;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:25px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:60px 20px;
+}
+
+h1{
+text-align:center;
+margin-bottom:40px;
+}
+
+.search{
+display:flex;
+gap:15px;
+justify-content:center;
+flex-wrap:wrap;
+margin-bottom:40px;
+}
+
+select,button{
+padding:12px;
+border-radius:5px;
+border:none;
+}
+
+button{
+background:#ff7b00;
+color:white;
+cursor:pointer;
+}
+
+.results{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.agent-card{
+background:#112a54;
+padding:20px;
+border-radius:10px;
+text-align:center;
+}
+
+.agent-card img{
+width:100%;
+height:200px;
+object-fit:cover;
+border-radius:10px;
+margin-bottom:15px;
+}
+
+.agent-card a{
+display:inline-block;
+margin-top:10px;
+background:#ff7b00;
+padding:10px 15px;
+color:white;
+text-decoration:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<nav>
+
+<div><b>My Property Agent</b></div>
+
+<div>
+<a href="index.html">Home</a>
+<a href="find-agents.html">Find Agents</a>
+<a href="#">Agent Sign Up</a>
+<a href="#">Pricing</a>
+</div>
+
+</nav>
+
+<div class="container">
+
+<h1>Find Real Estate Agents</h1>
+
+<div class="search">
+
+<select id="country"></select>
+<select id="state"></select>
+<select id="city"></select>
+
+<button onclick="searchAgents()">Search</button>
+
+</div>
+
+<div id="results" class="results"></div>
+
+</div>
+
+
+<script>
+
+/* SUPABASE */
+
+const supabaseUrl="https://sfysccrjpadcumqakvbz.supabase.co"
+const supabaseKey="PASTE_ANON_KEY"
+
+const supabase=supabase.createClient(supabaseUrl,supabaseKey)
+
+
+/* LOCATION DROPDOWNS */
+
+const countrySelect=document.getElementById("country")
+const stateSelect=document.getElementById("state")
+const citySelect=document.getElementById("city")
+
+async function loadCountries(){
+
+const res=await fetch("https://countriesnow.space/api/v0.1/countries")
+const data=await res.json()
+
+countrySelect.innerHTML="<option>Select Country</option>"
+
+data.data.forEach(c=>{
+const option=document.createElement("option")
+option.value=c.country
+option.textContent=c.country
+countrySelect.appendChild(option)
+})
+
+}
+
+countrySelect.addEventListener("change",async()=>{
+
+const country=countrySelect.value
+
+const res=await fetch("https://countriesnow.space/api/v0.1/countries/states",{
+
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({country})
+
+})
+
+const data=await res.json()
+
+stateSelect.innerHTML=""
+
+data.data.states.forEach(s=>{
+const option=document.createElement("option")
+option.value=s.name
+option.textContent=s.name
+stateSelect.appendChild(option)
+})
+
+})
+
+stateSelect.addEventListener("change",async()=>{
+
+const country=countrySelect.value
+const state=stateSelect.value
+
+const res=await fetch("https://countriesnow.space/api/v0.1/countries/state/cities",{
+
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({country,state})
+
+})
+
+const data=await res.json()
+
+citySelect.innerHTML=""
+
+data.data.forEach(city=>{
+const option=document.createElement("option")
+option.value=city
+option.textContent=city
+citySelect.appendChild(option)
+})
+
+})
+
+loadCountries()
+
+
+/* SEARCH AGENTS */
+
+async function searchAgents(){
+
+const country=countrySelect.value
+const state=stateSelect.value
+const city=citySelect.value
+
+const {data,error}=await supabase
+.from("agents")
+.select("*")
+.eq("country",country)
+.eq("state",state)
+.eq("city",city)
+
+const container=document.getElementById("results")
+
+container.innerHTML=""
+
+data.forEach(agent=>{
+
+const card=document.createElement("div")
+
+card.className="agent-card"
+
+card.innerHTML=`
+
+<h3>${agent["Owner Name"]}</h3>
+
+<p>${agent.business_name}</p>
+
+<p>${agent.city}, ${agent.state}</p>
+
+<a href="${agent.website_url}" target="_blank">Visit Website</a>
+
+`
+
+container.appendChild(card)
+
+})
+
+}
+
+</script>
+
+</body>
+
+</html>
