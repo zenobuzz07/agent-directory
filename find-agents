@@ -133,7 +133,7 @@ text-decoration:none;
 /* SUPABASE */
 
 const supabaseUrl="https://sfysccrjpadcumqakvbz.supabase.co"
-const supabaseKey="PASTE_ANON_KEY"
+const supabaseKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmeXNjY3JqcGFkY3VtcWFrdmJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTEyMjAsImV4cCI6MjA4ODI2NzIyMH0.zg-8sziq-2fsbL3LFmGRhSv0m32thTcVS3ZhRb7gn8Y"
 
 const supabase=supabase.createClient(supabaseUrl,supabaseKey)
 
