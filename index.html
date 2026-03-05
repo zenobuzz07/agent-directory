@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Agent Directory</title>
+<title>Real Estate Agent Directory</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
 </head>
 
 <body>
@@ -28,5 +32,52 @@
 
 </form>
 
+<script>
+
+const supabaseUrl = "https://sfysccrjpadcumqakvbz.supabase.co"
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmeXNjY3JqcGFkY3VtcWFrdmJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTEyMjAsImV4cCI6MjA4ODI2NzIyMH0.zg-8sziq-2fsbL3LFmGRhSv0m32thTcVS3ZhRb7gn8Y"
+
+const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+
+document.getElementById("agentForm").addEventListener("submit", async (e) => {
+
+e.preventDefault()
+
+const name = document.getElementById("name").value
+const business_name = document.getElementById("business_name").value
+const country = document.getElementById("country").value
+const state = document.getElementById("state").value
+const city = document.getElementById("city").value
+const website_url = document.getElementById("website_url").value
+
+const { data, error } = await supabase
+.from("agents")
+.insert([
+{
+name,
+business_name,
+country,
+state,
+city,
+website_url,
+subscription_status: "inactive"
+}
+])
+
+if(error){
+
+alert("Error saving agent")
+
+}else{
+
+alert("Agent added successfully")
+
+}
+
+})
+
+</script>
+
 </body>
+
 </html>
