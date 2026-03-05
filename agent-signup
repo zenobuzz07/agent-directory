@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Agent Sign Up</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0b1d3a;
+color:white;
+}
+
+nav{
+display:flex;
+justify-content:space-between;
+padding:20px 60px;
+background:#08152b;
+}
+
+nav a{
+color:white;
+margin-left:25px;
+text-decoration:none;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+padding:60px 20px;
+}
+
+form{
+background:#112a54;
+padding:30px;
+border-radius:10px;
+}
+
+input,select{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:none;
+border-radius:5px;
+}
+
+button{
+background:#ff7b00;
+padding:12px;
+border:none;
+color:white;
+cursor:pointer;
+width:100%;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<nav>
+
+<div><b>My Property Agent</b></div>
+
+<div>
+<a href="index.html">Home</a>
+<a href="find-agents.html">Find Agents</a>
+<a href="agent-signup.html">Agent Sign Up</a>
+<a href="#">Pricing</a>
+</div>
+
+</nav>
+
+<div class="container">
+
+<h1>Agent Sign Up</h1>
+
+<form id="agentForm">
+
+<input placeholder="Owner Name" id="owner_name" required>
+
+<input placeholder="Business Name" id="business_name" required>
+
+<input placeholder="Email" id="email">
+
+<input placeholder="Phone" id="phone">
+
+<select id="country"></select>
+<select id="state"></select>
+<select id="city"></select>
+
+<input placeholder="Zip Code" id="zipcode">
+
+<input placeholder="Website URL" id="website_url">
+
+<input type="file" id="profile_image">
+
+<button type="submit">Create Profile</button>
+
+</form>
+
+</div>
+
+
+<script>
+
+/* SUPABASE */
+
+const supabaseUrl="https://sfysccrjpadcumqakvbz.supabase.co"
+const supabaseKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmeXNjY3JqcGFkY3VtcWFrdmJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTEyMjAsImV4cCI6MjA4ODI2NzIyMH0.zg-8sziq-2fsbL3LFmGRhSv0m32thTcVS3ZhRb7gn8Y"
+
+const supabase=supabase.createClient(supabaseUrl,supabaseKey)
+
+
+/* LOCATION DROPDOWN */
+
+const countrySelect=document.getElementById("country")
+const stateSelect=document.getElementById("state")
+const citySelect=document.getElementById("city")
+
+async function loadCountries(){
+
+const res=await fetch("https://countriesnow.space/api/v0.1/countries")
+const data=await res.json()
+
+countrySelect.innerHTML="<option>Select Country</option>"
+
+data.data.forEach(c=>{
+let option=document.createElement("option")
+option.value=c.country
+option.textContent=c.country
+countrySelect.appendChild(option)
+})
+
+}
+
+countrySelect.addEventListener("change",async()=>{
+
+const country=countrySelect.value
+
+const res=await fetch("https://countriesnow.space/api/v0.1/countries/states",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({country})
+})
+
+const data=await res.json()
+
+stateSelect.innerHTML=""
+
+data.data.states.forEach(s=>{
+let option=document.createElement("option")
+option.value=s.name
+option.textContent=s.name
+stateSelect.appendChild(option)
+})
+
+})
+
+stateSelect.addEventListener("change",async()=>{
+
+const country=countrySelect.value
+const state=stateSelect.value
+
+const res=await fetch("https://countriesnow.space/api/v0.1/countries/state/cities",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({country,state})
+})
+
+const data=await res.json()
+
+citySelect.innerHTML=""
+
+data.data.forEach(city=>{
+let option=document.createElement("option")
+option.value=city
+option.textContent=city
+citySelect.appendChild(option)
+})
+
+})
+
+loadCountries()
+
+
+/* SAVE AGENT */
+
+document.getElementById("agentForm").addEventListener("submit",async(e)=>{
+
+e.preventDefault()
+
+const owner_name=document.getElementById("owner_name").value
+const business_name=document.getElementById("business_name").value
+const email=document.getElementById("email").value
+const phone=document.getElementById("phone").value
+const country=countrySelect.value
+const state=stateSelect.value
+const city=citySelect.value
+const zipcode=document.getElementById("zipcode").value
+const website_url=document.getElementById("website_url").value
+
+const file=document.getElementById("profile_image").files[0]
+
+let image_url=""
+
+if(file){
+
+const fileName=Date.now()+file.name
+
+await supabase.storage
+.from("agent-images")
+.upload(fileName,file)
+
+const {data}=supabase.storage
+.from("agent-images")
+.getPublicUrl(fileName)
+
+image_url=data.publicUrl
+
+}
+
+const {error}=await supabase
+.from("agents")
+.insert([{
+
+"Owner Name":owner_name,
+business_name,
+email,
+phone,
+country,
+state,
+city,
+zipcode,
+website_url,
+profile_image:image_url,
+subscription_status:"inactive"
+
+}])
+
+if(error){
+
+alert(error.message)
+
+}else{
+
+alert("Profile Created")
+
+}
+
+})
+
+</script>
+
+</body>
+
+</html>
