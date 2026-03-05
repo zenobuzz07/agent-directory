@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<title>Find My Property Agent</title>
+<title>My Property Agent</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -11,7 +12,9 @@
 body{
 margin:0;
 font-family:Arial;
-background:#f5f7fb;
+background:#0b1d3a;
+color:white;
+overflow-x:hidden;
 }
 
 /* NAVBAR */
@@ -20,25 +23,24 @@ nav{
 display:flex;
 justify-content:space-between;
 padding:20px 60px;
-background:white;
-box-shadow:0 2px 10px rgba(0,0,0,0.1);
-position:sticky;
-top:0;
+background:#08152b;
+position:fixed;
+width:100%;
 z-index:10;
 }
 
 nav a{
+color:white;
 margin-left:25px;
 text-decoration:none;
-color:#333;
 font-weight:600;
 }
 
 /* HERO */
 
 .hero{
+height:100vh;
 position:relative;
-height:90vh;
 overflow:hidden;
 }
 
@@ -48,42 +50,69 @@ width:100%;
 height:100%;
 background-size:cover;
 background-position:center;
+opacity:0;
+transition:opacity 1.5s ease;
 display:flex;
 align-items:center;
 justify-content:center;
-color:white;
+}
+
+.slide.active{
+opacity:1;
+}
+
+.overlay{
+background:rgba(0,0,0,0.6);
+padding:40px;
+border-radius:10px;
 text-align:center;
 }
 
-.hero-content{
-background:rgba(0,0,0,0.45);
-padding:40px;
-border-radius:10px;
+/* SEARCH */
+
+.search-box{
+margin-top:20px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+justify-content:center;
 }
 
-.hero h1{
-font-size:48px;
-margin-bottom:20px;
-}
-
-.hero button{
-padding:15px 30px;
-background:#ff6b35;
+select{
+padding:12px;
 border:none;
+border-radius:5px;
+min-width:180px;
+}
+
+button{
+background:#ff7b00;
+border:none;
+padding:12px 25px;
 color:white;
-font-size:16px;
+font-weight:bold;
 cursor:pointer;
+border-radius:5px;
+}
+
+/* STAR BACKGROUND */
+
+.stars{
+position:fixed;
+width:100%;
+height:100%;
+top:0;
+left:0;
+background:url("https://www.transparenttextures.com/patterns/stardust.png");
+opacity:0.15;
+z-index:-1;
 }
 
 /* SECTION */
 
 .section{
 padding:80px 60px;
-}
-
-.section h2{
 text-align:center;
-margin-bottom:50px;
 }
 
 /* SIGNUP SLIDER */
@@ -91,23 +120,21 @@ margin-bottom:50px;
 .signup-grid{
 display:flex;
 gap:30px;
+margin-top:40px;
 }
 
 .signup-card{
 flex:1;
-background-size:cover;
 height:350px;
-position:relative;
-color:white;
+background-size:cover;
 display:flex;
 align-items:center;
 justify-content:center;
 }
 
 .signup-overlay{
-background:rgba(0,0,0,0.5);
+background:rgba(0,0,0,0.6);
 padding:30px;
-text-align:center;
 }
 
 /* ABOUT */
@@ -116,6 +143,7 @@ text-align:center;
 display:flex;
 gap:40px;
 align-items:center;
+margin-top:40px;
 }
 
 .about img{
@@ -128,45 +156,20 @@ border-radius:10px;
 .features{
 display:flex;
 gap:30px;
+margin-top:40px;
 }
 
 .feature{
 flex:1;
-background:white;
+background:#112a54;
 padding:30px;
-border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.05);
-text-align:center;
-}
-
-/* AGENTS */
-
-.agents{
-display:flex;
-gap:20px;
-}
-
-.agent-card{
-flex:1;
-background:white;
-padding:20px;
-border-radius:10px;
-text-align:center;
-box-shadow:0 4px 10px rgba(0,0,0,0.05);
-}
-
-.agent-card img{
-width:100%;
-height:200px;
-object-fit:cover;
 border-radius:10px;
 }
 
 footer{
-background:#222;
-color:white;
 text-align:center;
-padding:30px;
+padding:40px;
+background:#08152b;
 margin-top:60px;
 }
 
@@ -176,12 +179,13 @@ margin-top:60px;
 
 <body>
 
+<div class="stars"></div>
 
-<!-- NAVIGATION -->
+<!-- NAV -->
 
 <nav>
 
-<div><strong>My Property Agent</strong></div>
+<div><b>My Property Agent</b></div>
 
 <div>
 <a href="#">Home</a>
@@ -193,21 +197,75 @@ margin-top:60px;
 </nav>
 
 
-<!-- HERO SLIDER -->
+<!-- HERO -->
 
 <section class="hero">
 
-<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1560518883-ce09059eeffa');">
-<div class="hero-content">
-<h1>Find The Best Real Estate Agents</h1>
+<div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1560518883-ce09059eeffa');">
+
+<div class="overlay">
+
+<h1>Find Trusted Real Estate Agents</h1>
+
+<p>Search professionals in your city</p>
+
+<div class="search-box">
+
+<select id="country"></select>
+<select id="state"></select>
+<select id="city"></select>
+
 <button>Find My Agent</button>
+
 </div>
+
+</div>
+
+</div>
+
+
+<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1570129477492-45c003edd2be');">
+
+<div class="overlay">
+
+<h1>Connect With Experts</h1>
+
+<p>Buy or sell property with confidence</p>
+
+</div>
+
+</div>
+
+
+<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1560185127-6ed189bf02f4');">
+
+<div class="overlay">
+
+<h1>Discover Local Professionals</h1>
+
+<p>Search thousands of verified agents</p>
+
+</div>
+
+</div>
+
+
+<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1501183638710-841dd1904471');">
+
+<div class="overlay">
+
+<h1>Grow Your Real Estate Business</h1>
+
+<p>Join our network of professionals</p>
+
+</div>
+
 </div>
 
 </section>
 
 
-<!-- SIGN UP SECTION -->
+<!-- SIGNUP -->
 
 <section class="section">
 
@@ -218,9 +276,13 @@ margin-top:60px;
 <div class="signup-card" style="background-image:url('https://images.unsplash.com/photo-1560185127-6ed189bf02f4');">
 
 <div class="signup-overlay">
-<h3>Get More Clients</h3>
-<p>List your business and receive traffic from buyers searching for agents.</p>
-<button>Sign Up As Agent</button>
+
+<h3>Get More Leads</h3>
+
+<p>List your profile and attract buyers.</p>
+
+<button>Sign Up</button>
+
 </div>
 
 </div>
@@ -228,9 +290,13 @@ margin-top:60px;
 <div class="signup-card" style="background-image:url('https://images.unsplash.com/photo-1570129477492-45c003edd2be');">
 
 <div class="signup-overlay">
+
 <h3>Grow Your Brand</h3>
-<p>Increase visibility and attract more leads through our platform.</p>
+
+<p>Increase your online visibility.</p>
+
 <button>Join Now</button>
+
 </div>
 
 </div>
@@ -244,23 +310,19 @@ margin-top:60px;
 
 <section class="section">
 
+<h2>About Us</h2>
+
 <div class="about">
 
 <img src="https://images.unsplash.com/photo-1501183638710-841dd1904471">
 
-<div>
-
-<h2>About Our Platform</h2>
-
 <p>
 
-My Property Agent helps buyers and sellers connect with trusted real estate agents across the world.
+My Property Agent connects buyers and sellers with trusted real estate professionals around the world.
 
-Agents can list their business and gain visibility while visitors can easily search and find professionals in their area.
+Search by country, state, and city to find agents who can help you make the best property decisions.
 
 </p>
-
-</div>
 
 </div>
 
@@ -276,49 +338,18 @@ Agents can list their business and gain visibility while visitors can easily sea
 <div class="features">
 
 <div class="feature">
-<h3>Verified Agents</h3>
-<p>Browse profiles of real estate professionals in your area.</p>
+<h3>Global Directory</h3>
+<p>Search agents across multiple countries.</p>
 </div>
 
 <div class="feature">
-<h3>Location Based Search</h3>
-<p>Find agents using country, state, and city filters.</p>
+<h3>Smart Search</h3>
+<p>Location-based filtering for better results.</p>
 </div>
 
 <div class="feature">
 <h3>Direct Contact</h3>
-<p>Visit agent websites and connect instantly.</p>
-</div>
-
-</div>
-
-</section>
-
-
-<!-- FEATURED AGENTS -->
-
-<section class="section">
-
-<h2>Featured Agents</h2>
-
-<div class="agents">
-
-<div class="agent-card">
-<img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2">
-<h3>John Smith</h3>
-<p>Texas Realty</p>
-</div>
-
-<div class="agent-card">
-<img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e">
-<h3>Emma Wilson</h3>
-<p>New York Homes</p>
-</div>
-
-<div class="agent-card">
-<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d">
-<h3>Michael Brown</h3>
-<p>California Estates</p>
+<p>Visit agent websites instantly.</p>
 </div>
 
 </div>
@@ -332,6 +363,106 @@ Agents can list their business and gain visibility while visitors can easily sea
 
 </footer>
 
+
+<script>
+
+/* HERO SLIDER */
+
+let slides=document.querySelectorAll(".slide")
+let index=0
+
+setInterval(()=>{
+
+slides[index].classList.remove("active")
+
+index=(index+1)%slides.length
+
+slides[index].classList.add("active")
+
+},5000)
+
+/* COUNTRY DROPDOWN */
+
+const countrySelect=document.getElementById("country")
+const stateSelect=document.getElementById("state")
+const citySelect=document.getElementById("city")
+
+async function loadCountries(){
+
+const res=await fetch("https://countriesnow.space/api/v0.1/countries")
+const data=await res.json()
+
+countrySelect.innerHTML="<option>Select Country</option>"
+
+data.data.forEach(c=>{
+
+let option=document.createElement("option")
+option.value=c.country
+option.textContent=c.country
+countrySelect.appendChild(option)
+
+})
+
+}
+
+countrySelect.addEventListener("change",async()=>{
+
+const country=countrySelect.value
+
+const res=await fetch("https://countriesnow.space/api/v0.1/countries/states",{
+
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({country})
+
+})
+
+const data=await res.json()
+
+stateSelect.innerHTML=""
+
+data.data.states.forEach(s=>{
+
+let option=document.createElement("option")
+option.value=s.name
+option.textContent=s.name
+stateSelect.appendChild(option)
+
+})
+
+})
+
+stateSelect.addEventListener("change",async()=>{
+
+const country=countrySelect.value
+const state=stateSelect.value
+
+const res=await fetch("https://countriesnow.space/api/v0.1/countries/state/cities",{
+
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({country,state})
+
+})
+
+const data=await res.json()
+
+citySelect.innerHTML=""
+
+data.data.forEach(city=>{
+
+let option=document.createElement("option")
+option.value=city
+option.textContent=city
+citySelect.appendChild(option)
+
+})
+
+})
+
+loadCountries()
+
+</script>
 
 </body>
 
