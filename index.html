@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 <title>Real Estate Agent Directory</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
 </head>
 
 <body>
@@ -16,17 +13,13 @@
 
 <form id="agentForm">
 
-<input placeholder="Agent Name" id="name" required><br><br>
+<input placeholder="Owner Name" id="owner_name" required><br><br>
 
 <input placeholder="Business Name" id="business_name" required><br><br>
 
-<input placeholder="Country" id="country" required><br><br>
+<input placeholder="Email" id="email" required><br><br>
 
-<input placeholder="State" id="state" required><br><br>
-
-<input placeholder="City" id="city" required><br><br>
-
-<input placeholder="Website URL" id="website_url" required><br><br>
+<input placeholder="Phone" id="phone" required><br><br>
 
 <button type="submit">Add Agent</button>
 
@@ -37,41 +30,32 @@
 const supabaseUrl = "https://sfysccrjpadcumqakvbz.supabase.co"
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmeXNjY3JqcGFkY3VtcWFrdmJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTEyMjAsImV4cCI6MjA4ODI2NzIyMH0.zg-8sziq-2fsbL3LFmGRhSv0m32thTcVS3ZhRb7gn8Y"
 
-const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
 
 document.getElementById("agentForm").addEventListener("submit", async (e) => {
 
 e.preventDefault()
 
-const name = document.getElementById("name").value
+const owner_name = document.getElementById("owner_name").value
 const business_name = document.getElementById("business_name").value
-const country = document.getElementById("country").value
-const state = document.getElementById("state").value
-const city = document.getElementById("city").value
-const website_url = document.getElementById("website_url").value
+const email = document.getElementById("email").value
+const phone = document.getElementById("phone").value
 
-const { data, error } = await supabase
+const { data, error } = await supabaseClient
 .from("agents")
 .insert([
 {
-name,
-business_name,
-country,
-state,
-city,
-website_url,
-subscription_status: "inactive"
+"Owner Name": owner_name,
+business_name: business_name,
+email: email,
+phone: phone
 }
 ])
 
 if(error){
-
-alert("Error saving agent")
-
+alert("Error: " + error.message)
 }else{
-
-alert("Agent added successfully")
-
+alert("Agent saved")
 }
 
 })
@@ -79,5 +63,4 @@ alert("Agent added successfully")
 </script>
 
 </body>
-
 </html>
