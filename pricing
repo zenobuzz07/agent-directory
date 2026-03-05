@@ -141,7 +141,7 @@ margin-top:60px;
 </ul>
 
 <a href="agent-signup.html">
-<button>Join Now</button>
+<button id="payBtn">Subscribe Now</button>
 </a>
 
 </div>
@@ -178,6 +178,46 @@ margin-top:60px;
 
 </footer>
 
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+document.getElementById("payBtn").onclick = function(){
+
+var options = {
+
+key: "rzp_live_SNWJWeffEC1xQl",
+
+amount: 29.99,
+
+currency: "USD",
+
+name: "My Property Agent",
+
+description: "Agent Listing Subscription",
+
+handler: function (response){
+
+alert("Payment Successful");
+
+window.location.href = "agent-signup.html";
+
+},
+
+theme: {
+color: "#ff7b00"
+}
+
+};
+
+var rzp = new Razorpay(options);
+
+rzp.open();
+
+}
+
+</script>
 
 </body>
 
