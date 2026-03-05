@@ -1,8 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>Real Estate Agent Directory</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+body{
+font-family:Arial;
+max-width:900px;
+margin:auto;
+padding:40px;
+background:#f5f5f5;
+}
+
+h1{
+text-align:center;
+}
+
+form{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-bottom:40px;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+}
+
+button{
+background:#2c7be5;
+color:white;
+border:none;
+padding:12px;
+cursor:pointer;
+width:100%;
+}
+
+.agent-card{
+background:white;
+padding:20px;
+margin-bottom:15px;
+border-radius:10px;
+}
+
+</style>
+
 </head>
 
 <body>
@@ -13,26 +61,121 @@
 
 <form id="agentForm">
 
-<input placeholder="Owner Name" id="owner_name" required><br><br>
+<input placeholder="Owner Name" id="owner_name" required>
 
-<input placeholder="Business Name" id="business_name" required><br><br>
+<input placeholder="Business Name" id="business_name" required>
 
-<input placeholder="Email" id="email" required><br><br>
+<input placeholder="Email" id="email">
 
-<input placeholder="Phone" id="phone" required><br><br>
+<input placeholder="Phone" id="phone">
+
+<select id="country"></select>
+
+<select id="state"></select>
+
+<select id="city"></select>
+
+<input placeholder="Zip Code" id="zipcode">
+
+<input placeholder="Website URL" id="website_url">
 
 <button type="submit">Add Agent</button>
 
 </form>
 
+<h2>Agents</h2>
+
+<div id="agentsList"></div>
+
+
 <script>
+
+/* ---------------- SUPABASE ---------------- */
 
 const supabaseUrl = "https://sfysccrjpadcumqakvbz.supabase.co"
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmeXNjY3JqcGFkY3VtcWFrdmJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTEyMjAsImV4cCI6MjA4ODI2NzIyMH0.zg-8sziq-2fsbL3LFmGRhSv0m32thTcVS3ZhRb7gn8Y"
 
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+const supabaseClient = supabase.createClient(supabaseUrl,supabaseKey)
 
-document.getElementById("agentForm").addEventListener("submit", async (e) => {
+
+/* ---------------- LOCATION DROPDOWNS ---------------- */
+
+const countrySelect = document.getElementById("country")
+const stateSelect = document.getElementById("state")
+const citySelect = document.getElementById("city")
+
+async function loadCountries(){
+
+const res = await fetch("https://countriesnow.space/api/v0.1/countries")
+const data = await res.json()
+
+countrySelect.innerHTML = "<option>Select Country</option>"
+
+data.data.forEach(c=>{
+const option=document.createElement("option")
+option.value=c.country
+option.textContent=c.country
+countrySelect.appendChild(option)
+})
+
+}
+
+countrySelect.addEventListener("change",async()=>{
+
+const country = countrySelect.value
+
+const res = await fetch("https://countriesnow.space/api/v0.1/countries/states",{ 
+method:"POST",
+headers:{ "Content-Type":"application/json"},
+body:JSON.stringify({country:country})
+})
+
+const data = await res.json()
+
+stateSelect.innerHTML=""
+
+data.data.states.forEach(s=>{
+const option=document.createElement("option")
+option.value=s.name
+option.textContent=s.name
+stateSelect.appendChild(option)
+})
+
+})
+
+stateSelect.addEventListener("change",async()=>{
+
+const country = countrySelect.value
+const state = stateSelect.value
+
+const res = await fetch("https://countriesnow.space/api/v0.1/countries/state/cities",{ 
+method:"POST",
+headers:{ "Content-Type":"application/json"},
+body:JSON.stringify({
+country:country,
+state:state
+})
+})
+
+const data = await res.json()
+
+citySelect.innerHTML=""
+
+data.data.forEach(city=>{
+const option=document.createElement("option")
+option.value=city
+option.textContent=city
+citySelect.appendChild(option)
+})
+
+})
+
+loadCountries()
+
+
+/* ---------------- SAVE AGENT ---------------- */
+
+document.getElementById("agentForm").addEventListener("submit", async (e)=>{
 
 e.preventDefault()
 
@@ -40,25 +183,79 @@ const owner_name = document.getElementById("owner_name").value
 const business_name = document.getElementById("business_name").value
 const email = document.getElementById("email").value
 const phone = document.getElementById("phone").value
+const country = countrySelect.value
+const state = stateSelect.value
+const city = citySelect.value
+const zipcode = document.getElementById("zipcode").value
+const website_url = document.getElementById("website_url").value
 
-const { data, error } = await supabaseClient
+const {error} = await supabaseClient
 .from("agents")
-.insert([
-{
-"Owner Name": owner_name,
-business_name: business_name,
-email: email,
-phone: phone
-}
-])
+.insert([{
+
+"Owner Name":owner_name,
+business_name:business_name,
+email:email,
+phone:phone,
+country:country,
+state:state,
+city:city,
+zipcode:zipcode,
+website_url:website_url,
+subscription_status:"inactive"
+
+}])
 
 if(error){
-alert("Error: " + error.message)
+
+alert(error.message)
+
 }else{
-alert("Agent saved")
+
+alert("Agent Added")
+
+loadAgents()
+
 }
 
 })
+
+
+/* ---------------- LOAD AGENTS ---------------- */
+
+async function loadAgents(){
+
+const {data} = await supabaseClient
+.from("agents")
+.select("*")
+
+const container = document.getElementById("agentsList")
+
+container.innerHTML=""
+
+data.forEach(agent=>{
+
+const card=document.createElement("div")
+
+card.className="agent-card"
+
+card.innerHTML=`
+
+<h3>${agent["Owner Name"]}</h3>
+<p>${agent.business_name}</p>
+<p>${agent.city}, ${agent.state}</p>
+
+<a href="${agent.website_url}" target="_blank">Visit Website</a>
+
+`
+
+container.appendChild(card)
+
+})
+
+}
+
+loadAgents()
 
 </script>
 
