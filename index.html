@@ -2,51 +2,172 @@
 <html>
 <head>
 
-<title>Real Estate Agent Directory</title>
+<title>Find My Property Agent</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 
 body{
+margin:0;
 font-family:Arial;
-max-width:900px;
-margin:auto;
-padding:40px;
-background:#f5f5f5;
+background:#f5f7fb;
 }
 
-h1{
+/* NAVBAR */
+
+nav{
+display:flex;
+justify-content:space-between;
+padding:20px 60px;
+background:white;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+position:sticky;
+top:0;
+z-index:10;
+}
+
+nav a{
+margin-left:25px;
+text-decoration:none;
+color:#333;
+font-weight:600;
+}
+
+/* HERO */
+
+.hero{
+position:relative;
+height:90vh;
+overflow:hidden;
+}
+
+.slide{
+position:absolute;
+width:100%;
+height:100%;
+background-size:cover;
+background-position:center;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
 text-align:center;
 }
 
-form{
-background:white;
-padding:20px;
+.hero-content{
+background:rgba(0,0,0,0.45);
+padding:40px;
 border-radius:10px;
-margin-bottom:40px;
 }
 
-input,select{
-width:100%;
-padding:10px;
-margin-bottom:10px;
+.hero h1{
+font-size:48px;
+margin-bottom:20px;
 }
 
-button{
-background:#2c7be5;
-color:white;
+.hero button{
+padding:15px 30px;
+background:#ff6b35;
 border:none;
-padding:12px;
+color:white;
+font-size:16px;
 cursor:pointer;
-width:100%;
+}
+
+/* SECTION */
+
+.section{
+padding:80px 60px;
+}
+
+.section h2{
+text-align:center;
+margin-bottom:50px;
+}
+
+/* SIGNUP SLIDER */
+
+.signup-grid{
+display:flex;
+gap:30px;
+}
+
+.signup-card{
+flex:1;
+background-size:cover;
+height:350px;
+position:relative;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.signup-overlay{
+background:rgba(0,0,0,0.5);
+padding:30px;
+text-align:center;
+}
+
+/* ABOUT */
+
+.about{
+display:flex;
+gap:40px;
+align-items:center;
+}
+
+.about img{
+width:50%;
+border-radius:10px;
+}
+
+/* FEATURES */
+
+.features{
+display:flex;
+gap:30px;
+}
+
+.feature{
+flex:1;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.05);
+text-align:center;
+}
+
+/* AGENTS */
+
+.agents{
+display:flex;
+gap:20px;
 }
 
 .agent-card{
+flex:1;
 background:white;
 padding:20px;
-margin-bottom:15px;
 border-radius:10px;
+text-align:center;
+box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+.agent-card img{
+width:100%;
+height:200px;
+object-fit:cover;
+border-radius:10px;
+}
+
+footer{
+background:#222;
+color:white;
+text-align:center;
+padding:30px;
+margin-top:60px;
 }
 
 </style>
@@ -55,209 +176,163 @@ border-radius:10px;
 
 <body>
 
-<h1>Real Estate Agent Directory</h1>
 
-<h2>Add Agent</h2>
+<!-- NAVIGATION -->
 
-<form id="agentForm">
+<nav>
 
-<input placeholder="Owner Name" id="owner_name" required>
+<div><strong>My Property Agent</strong></div>
 
-<input placeholder="Business Name" id="business_name" required>
+<div>
+<a href="#">Home</a>
+<a href="#">Find Agents</a>
+<a href="#">Agent Sign Up</a>
+<a href="#">Pricing</a>
+</div>
 
-<input placeholder="Email" id="email">
+</nav>
 
-<input placeholder="Phone" id="phone">
 
-<select id="country"></select>
+<!-- HERO SLIDER -->
 
-<select id="state"></select>
+<section class="hero">
 
-<select id="city"></select>
+<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1560518883-ce09059eeffa');">
+<div class="hero-content">
+<h1>Find The Best Real Estate Agents</h1>
+<button>Find My Agent</button>
+</div>
+</div>
 
-<input placeholder="Zip Code" id="zipcode">
+</section>
 
-<input placeholder="Website URL" id="website_url">
 
-<button type="submit">Add Agent</button>
+<!-- SIGN UP SECTION -->
 
-</form>
+<section class="section">
 
-<h2>Agents</h2>
+<h2>Join As A Real Estate Agent</h2>
 
-<div id="agentsList"></div>
+<div class="signup-grid">
 
+<div class="signup-card" style="background-image:url('https://images.unsplash.com/photo-1560185127-6ed189bf02f4');">
 
-<script>
+<div class="signup-overlay">
+<h3>Get More Clients</h3>
+<p>List your business and receive traffic from buyers searching for agents.</p>
+<button>Sign Up As Agent</button>
+</div>
 
-/* ---------------- SUPABASE ---------------- */
+</div>
 
-const supabaseUrl = "https://sfysccrjpadcumqakvbz.supabase.co"
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmeXNjY3JqcGFkY3VtcWFrdmJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTEyMjAsImV4cCI6MjA4ODI2NzIyMH0.zg-8sziq-2fsbL3LFmGRhSv0m32thTcVS3ZhRb7gn8Y"
+<div class="signup-card" style="background-image:url('https://images.unsplash.com/photo-1570129477492-45c003edd2be');">
 
-const supabaseClient = supabase.createClient(supabaseUrl,supabaseKey)
+<div class="signup-overlay">
+<h3>Grow Your Brand</h3>
+<p>Increase visibility and attract more leads through our platform.</p>
+<button>Join Now</button>
+</div>
 
+</div>
 
-/* ---------------- LOCATION DROPDOWNS ---------------- */
+</div>
 
-const countrySelect = document.getElementById("country")
-const stateSelect = document.getElementById("state")
-const citySelect = document.getElementById("city")
+</section>
 
-async function loadCountries(){
 
-const res = await fetch("https://countriesnow.space/api/v0.1/countries")
-const data = await res.json()
+<!-- ABOUT -->
 
-countrySelect.innerHTML = "<option>Select Country</option>"
+<section class="section">
 
-data.data.forEach(c=>{
-const option=document.createElement("option")
-option.value=c.country
-option.textContent=c.country
-countrySelect.appendChild(option)
-})
+<div class="about">
 
-}
+<img src="https://images.unsplash.com/photo-1501183638710-841dd1904471">
 
-countrySelect.addEventListener("change",async()=>{
+<div>
 
-const country = countrySelect.value
+<h2>About Our Platform</h2>
 
-const res = await fetch("https://countriesnow.space/api/v0.1/countries/states",{ 
-method:"POST",
-headers:{ "Content-Type":"application/json"},
-body:JSON.stringify({country:country})
-})
+<p>
 
-const data = await res.json()
+My Property Agent helps buyers and sellers connect with trusted real estate agents across the world.
 
-stateSelect.innerHTML=""
+Agents can list their business and gain visibility while visitors can easily search and find professionals in their area.
 
-data.data.states.forEach(s=>{
-const option=document.createElement("option")
-option.value=s.name
-option.textContent=s.name
-stateSelect.appendChild(option)
-})
+</p>
 
-})
+</div>
 
-stateSelect.addEventListener("change",async()=>{
+</div>
 
-const country = countrySelect.value
-const state = stateSelect.value
+</section>
 
-const res = await fetch("https://countriesnow.space/api/v0.1/countries/state/cities",{ 
-method:"POST",
-headers:{ "Content-Type":"application/json"},
-body:JSON.stringify({
-country:country,
-state:state
-})
-})
 
-const data = await res.json()
+<!-- FEATURES -->
 
-citySelect.innerHTML=""
+<section class="section">
 
-data.data.forEach(city=>{
-const option=document.createElement("option")
-option.value=city
-option.textContent=city
-citySelect.appendChild(option)
-})
+<h2>Why Choose Our Platform</h2>
 
-})
+<div class="features">
 
-loadCountries()
+<div class="feature">
+<h3>Verified Agents</h3>
+<p>Browse profiles of real estate professionals in your area.</p>
+</div>
 
+<div class="feature">
+<h3>Location Based Search</h3>
+<p>Find agents using country, state, and city filters.</p>
+</div>
 
-/* ---------------- SAVE AGENT ---------------- */
+<div class="feature">
+<h3>Direct Contact</h3>
+<p>Visit agent websites and connect instantly.</p>
+</div>
 
-document.getElementById("agentForm").addEventListener("submit", async (e)=>{
+</div>
 
-e.preventDefault()
+</section>
 
-const owner_name = document.getElementById("owner_name").value
-const business_name = document.getElementById("business_name").value
-const email = document.getElementById("email").value
-const phone = document.getElementById("phone").value
-const country = countrySelect.value
-const state = stateSelect.value
-const city = citySelect.value
-const zipcode = document.getElementById("zipcode").value
-const website_url = document.getElementById("website_url").value
 
-const {error} = await supabaseClient
-.from("agents")
-.insert([{
+<!-- FEATURED AGENTS -->
 
-"Owner Name":owner_name,
-business_name:business_name,
-email:email,
-phone:phone,
-country:country,
-state:state,
-city:city,
-zipcode:zipcode,
-website_url:website_url,
-subscription_status:"inactive"
+<section class="section">
 
-}])
+<h2>Featured Agents</h2>
 
-if(error){
+<div class="agents">
 
-alert(error.message)
+<div class="agent-card">
+<img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2">
+<h3>John Smith</h3>
+<p>Texas Realty</p>
+</div>
 
-}else{
+<div class="agent-card">
+<img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e">
+<h3>Emma Wilson</h3>
+<p>New York Homes</p>
+</div>
 
-alert("Agent Added")
+<div class="agent-card">
+<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d">
+<h3>Michael Brown</h3>
+<p>California Estates</p>
+</div>
 
-loadAgents()
+</div>
 
-}
+</section>
 
-})
 
+<footer>
 
-/* ---------------- LOAD AGENTS ---------------- */
+© 2026 My Property Agent
 
-async function loadAgents(){
+</footer>
 
-const {data} = await supabaseClient
-.from("agents")
-.select("*")
-
-const container = document.getElementById("agentsList")
-
-container.innerHTML=""
-
-data.forEach(agent=>{
-
-const card=document.createElement("div")
-
-card.className="agent-card"
-
-card.innerHTML=`
-
-<h3>${agent["Owner Name"]}</h3>
-<p>${agent.business_name}</p>
-<p>${agent.city}, ${agent.state}</p>
-
-<a href="${agent.website_url}" target="_blank">Visit Website</a>
-
-`
-
-container.appendChild(card)
-
-})
-
-}
-
-loadAgents()
-
-</script>
 
 </body>
+
 </html>
