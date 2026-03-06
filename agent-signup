@@ -5,29 +5,41 @@
 
 <title>Agent Sign Up</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-background:#0b1d3a;
+background:#0a1a35;
 color:white;
 }
+
+/* NAVBAR */
 
 nav{
 display:flex;
 justify-content:space-between;
 padding:20px 60px;
-background:#08152b;
+background:#07142b;
 }
 
 nav a{
 color:white;
 margin-left:25px;
 text-decoration:none;
+font-weight:bold;
 }
+
+nav a:hover{
+color:#ff7b00;
+}
+
+/* FORM */
 
 .container{
 max-width:700px;
@@ -37,7 +49,7 @@ padding:60px 20px;
 
 form{
 background:#112a54;
-padding:30px;
+padding:40px;
 border-radius:10px;
 }
 
@@ -50,12 +62,13 @@ border-radius:5px;
 }
 
 button{
-background:#ff7b00;
-padding:12px;
-border:none;
-color:white;
-cursor:pointer;
 width:100%;
+background:#ff7b00;
+border:none;
+padding:14px;
+color:white;
+font-weight:bold;
+cursor:pointer;
 }
 
 </style>
@@ -72,14 +85,15 @@ width:100%;
 <a href="index.html">Home</a>
 <a href="find-agents.html">Find Agents</a>
 <a href="agent-signup.html">Agent Sign Up</a>
-<a href="#">Pricing</a>
+<a href="pricing.html">Pricing</a>
 </div>
 
 </nav>
 
+
 <div class="container">
 
-<h1>Agent Sign Up</h1>
+<h1 style="text-align:center;margin-bottom:30px;">Agent Sign Up</h1>
 
 <form id="agentForm">
 
@@ -99,9 +113,11 @@ width:100%;
 
 <input placeholder="Website URL" id="website_url">
 
+<label>Profile Image</label>
+
 <input type="file" id="profile_image">
 
-<button type="submit">Create Profile</button>
+<button type="submit">Submit & Pay</button>
 
 </form>
 
@@ -115,74 +131,86 @@ width:100%;
 const supabaseUrl="https://sfysccrjpadcumqakvbz.supabase.co"
 const supabaseKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmeXNjY3JqcGFkY3VtcWFrdmJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTEyMjAsImV4cCI6MjA4ODI2NzIyMH0.zg-8sziq-2fsbL3LFmGRhSv0m32thTcVS3ZhRb7gn8Y"
 
-const supabase=supabase.createClient(supabaseUrl,supabaseKey)
+const supabase=window.supabase.createClient(supabaseUrl,supabaseKey)
 
 
 /* LOCATION DROPDOWN */
 
-const countrySelect=document.getElementById("country")
-const stateSelect=document.getElementById("state")
-const citySelect=document.getElementById("city")
+const country=document.getElementById("country")
+const state=document.getElementById("state")
+const city=document.getElementById("city")
 
 async function loadCountries(){
 
 const res=await fetch("https://countriesnow.space/api/v0.1/countries")
+
 const data=await res.json()
 
-countrySelect.innerHTML="<option>Select Country</option>"
+country.innerHTML="<option>Select Country</option>"
 
 data.data.forEach(c=>{
+
 let option=document.createElement("option")
+
 option.value=c.country
 option.textContent=c.country
-countrySelect.appendChild(option)
+
+country.appendChild(option)
+
 })
 
 }
 
-countrySelect.addEventListener("change",async()=>{
-
-const country=countrySelect.value
+country.addEventListener("change",async()=>{
 
 const res=await fetch("https://countriesnow.space/api/v0.1/countries/states",{
+
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({country})
+body:JSON.stringify({country:country.value})
+
 })
 
 const data=await res.json()
 
-stateSelect.innerHTML=""
+state.innerHTML=""
 
 data.data.states.forEach(s=>{
+
 let option=document.createElement("option")
+
 option.value=s.name
 option.textContent=s.name
-stateSelect.appendChild(option)
-})
+
+state.appendChild(option)
 
 })
 
-stateSelect.addEventListener("change",async()=>{
+})
 
-const country=countrySelect.value
-const state=stateSelect.value
+state.addEventListener("change",async()=>{
 
 const res=await fetch("https://countriesnow.space/api/v0.1/countries/state/cities",{
+
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({country,state})
+body:JSON.stringify({country:country.value,state:state.value})
+
 })
 
 const data=await res.json()
 
-citySelect.innerHTML=""
+city.innerHTML=""
 
-data.data.forEach(city=>{
+data.data.forEach(c=>{
+
 let option=document.createElement("option")
-option.value=city
-option.textContent=city
-citySelect.appendChild(option)
+
+option.value=c
+option.textContent=c
+
+city.appendChild(option)
+
 })
 
 })
@@ -190,7 +218,7 @@ citySelect.appendChild(option)
 loadCountries()
 
 
-/* SAVE AGENT */
+/* FORM SUBMIT */
 
 document.getElementById("agentForm").addEventListener("submit",async(e)=>{
 
@@ -200,9 +228,9 @@ const owner_name=document.getElementById("owner_name").value
 const business_name=document.getElementById("business_name").value
 const email=document.getElementById("email").value
 const phone=document.getElementById("phone").value
-const country=countrySelect.value
-const state=stateSelect.value
-const city=citySelect.value
+const countryVal=country.value
+const stateVal=state.value
+const cityVal=city.value
 const zipcode=document.getElementById("zipcode").value
 const website_url=document.getElementById("website_url").value
 
@@ -226,21 +254,42 @@ image_url=data.publicUrl
 
 }
 
+
+/* RAZORPAY */
+
+var options={
+
+key:"rzp_live_SNWJWeffEC1xQl",
+
+amount:149900,
+
+currency:"INR",
+
+name:"My Property Agent",
+
+description:"Agent Listing Subscription",
+
+handler: async function () {
+
+/* SAVE AGENT */
+
 const {error}=await supabase
+
 .from("agents")
+
 .insert([{
 
 "Owner Name":owner_name,
 business_name,
 email,
 phone,
-country,
-state,
-city,
+country:countryVal,
+state:stateVal,
+city:cityVal,
 zipcode,
 website_url,
 profile_image:image_url,
-subscription_status:"inactive"
+subscription_status:"active"
 
 }])
 
@@ -250,9 +299,23 @@ alert(error.message)
 
 }else{
 
-alert("Profile Created")
+alert("Profile Created Successfully!")
+
+window.location.href="index.html"
 
 }
+
+},
+
+theme:{
+color:"#ff7b00"
+}
+
+}
+
+var rzp=new Razorpay(options)
+
+rzp.open()
 
 })
 
