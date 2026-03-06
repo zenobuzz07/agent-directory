@@ -12,7 +12,7 @@
 body{
 margin:0;
 font-family:Arial;
-background:#0b1d3a;
+background:#0a1a35;
 color:white;
 }
 
@@ -22,13 +22,18 @@ nav{
 display:flex;
 justify-content:space-between;
 padding:20px 60px;
-background:#08152b;
+background:#07142b;
 }
 
 nav a{
 color:white;
-text-decoration:none;
 margin-left:25px;
+text-decoration:none;
+font-weight:bold;
+}
+
+nav a:hover{
+color:#ff7b00;
 }
 
 /* PAGE */
@@ -40,62 +45,81 @@ padding:80px 20px;
 text-align:center;
 }
 
-h1{
-margin-bottom:50px;
-}
+/* PRICING GRID */
 
-/* PRICING */
-
-.pricing-grid{
+.pricing{
 display:flex;
-gap:30px;
+gap:40px;
 justify-content:center;
 flex-wrap:wrap;
+margin-top:50px;
 }
 
-.plan{
+/* CARD */
+
+.card{
 background:#112a54;
 padding:40px;
-border-radius:10px;
+border-radius:12px;
 width:300px;
+transition:transform 0.3s;
 }
 
-.plan h2{
-margin-bottom:10px;
+.card:hover{
+transform:translateY(-10px);
 }
+
+/* PRICE */
 
 .price{
-font-size:36px;
+font-size:40px;
 margin:20px 0;
 color:#ff7b00;
 }
 
-.plan ul{
+ul{
 list-style:none;
 padding:0;
 text-align:left;
 }
 
-.plan li{
+li{
 margin-bottom:10px;
 }
+
+/* BUTTON */
 
 button{
 background:#ff7b00;
 border:none;
-padding:12px 20px;
+padding:14px 20px;
 color:white;
 cursor:pointer;
 margin-top:20px;
+font-weight:bold;
+border-radius:6px;
 }
 
-/* FOOTER */
+button:hover{
+background:#ff9c2b;
+}
+
+/* HEADER */
+
+.header{
+max-width:700px;
+margin:auto;
+}
+
+.header p{
+color:#ccc;
+}
 
 footer{
 text-align:center;
 padding:40px;
-background:#08152b;
-margin-top:60px;
+background:#07142b;
+margin-top:80px;
 }
 
 </style>
@@ -104,7 +128,7 @@ margin-top:60px;
 
 <body>
 
-<!-- NAV -->
+<!-- NAVBAR -->
 
 <nav>
 
@@ -122,43 +146,70 @@ margin-top:60px;
 
 <div class="container">
 
+<div class="header">
+
 <h1>Pricing Plans</h1>
 
-<div class="pricing-grid">
+<p>
 
-<div class="plan">
+Choose a plan to list your real estate business and start getting traffic from our directory.
+
+</p>
+
+</div>
+
+
+<div class="pricing">
+
+<!-- BASIC PLAN -->
+
+<div class="card">
 
 <h2>Basic Listing</h2>
 
-<div class="price">$19 / month</div>
+<div class="price">₹1499/mo</div>
 
 <ul>
+
 <li>Agent profile listing</li>
+
 <li>Business information</li>
+
 <li>Website link</li>
+
 <li>Location visibility</li>
+
 <li>Global directory access</li>
+
 </ul>
 
 <a href="agent-signup.html">
-<button id="payBtn">Subscribe Now</button>
+<button>Subscribe</button>
 </a>
 
 </div>
 
 
-<div class="plan">
+<!-- FEATURED PLAN -->
+
+<div class="card">
 
 <h2>Featured Agent</h2>
 
-<div class="price">$49 / month</div>
+<div class="price">₹2999/mo</div>
 
 <ul>
+
 <li>Featured listing</li>
-<li>Appear at top of search</li>
-<li>Agent profile image</li>
+
+<li>Top search placement</li>
+
+<li>Profile image</li>
+
 <li>Direct website traffic</li>
+
 <li>Priority visibility</li>
+
 </ul>
 
 <a href="agent-signup.html">
@@ -166,6 +217,7 @@ margin-top:60px;
 </a>
 
 </div>
+
 
 </div>
 
@@ -178,46 +230,6 @@ margin-top:60px;
 
 </footer>
 
-
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-<script>
-
-document.getElementById("payBtn").onclick = function(){
-
-var options = {
-
-key: "rzp_live_SNWJWeffEC1xQl",
-
-amount: 29.99,
-
-currency: "USD",
-
-name: "My Property Agent",
-
-description: "Agent Listing Subscription",
-
-handler: function (response){
-
-alert("Payment Successful");
-
-window.location.href = "agent-signup.html";
-
-},
-
-theme: {
-color: "#ff7b00"
-}
-
-};
-
-var rzp = new Razorpay(options);
-
-rzp.open();
-
-}
-
-</script>
 
 </body>
 
