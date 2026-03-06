@@ -7,12 +7,19 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
 
-body{
+*{
 margin:0;
-font-family:Arial;
-background:#0a1a35;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins;
+}
+
+body{
+background:#071633;
 color:white;
 overflow-x:hidden;
 }
@@ -20,25 +27,26 @@ overflow-x:hidden;
 /* NAVBAR */
 
 nav{
+position:fixed;
+width:100%;
 display:flex;
 justify-content:space-between;
 align-items:center;
 padding:20px 60px;
-background:#07142b;
-position:fixed;
-width:100%;
-z-index:10;
+background:#06122a;
+z-index:1000;
 }
 
 nav a{
 color:white;
-margin-left:25px;
 text-decoration:none;
-font-weight:bold;
+margin-left:25px;
+font-weight:500;
+transition:.3s;
 }
 
 nav a:hover{
-color:#ff7b00;
+color:#ff8c00;
 }
 
 /* HERO */
@@ -56,136 +64,118 @@ height:100%;
 background-size:cover;
 background-position:center;
 opacity:0;
-transition:opacity 1.5s;
-display:flex;
-align-items:center;
-justify-content:center;
+transition:opacity 1s;
 }
 
 .slide.active{
 opacity:1;
 }
 
-.overlay{
-background:rgba(0,0,0,0.6);
-padding:40px;
+.hero-overlay{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:rgba(0,0,0,0.5);
+padding:50px;
 border-radius:10px;
 text-align:center;
-max-width:600px;
 }
 
-.overlay h1{
-font-size:40px;
+.hero h1{
+font-size:48px;
 margin-bottom:10px;
 }
 
-.search{
-margin-top:20px;
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-justify-content:center;
+.hero p{
+margin-bottom:25px;
 }
 
-select{
-padding:12px;
+.btn{
+background:#ff8c00;
 border:none;
-border-radius:5px;
-min-width:160px;
-}
-
-button{
-background:#ff7b00;
-border:none;
-padding:12px 25px;
+padding:14px 26px;
 color:white;
+font-weight:600;
+border-radius:6px;
 cursor:pointer;
-border-radius:5px;
-font-weight:bold;
+transition:.3s;
 }
 
-/* STAR BACKGROUND */
-
-.stars{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:url("https://www.transparenttextures.com/patterns/stardust.png");
-opacity:0.15;
-z-index:-1;
+.btn:hover{
+background:#ffa733;
 }
 
 /* SECTION */
 
 .section{
-padding:80px 60px;
+padding:100px 60px;
 text-align:center;
 }
 
-/* SIGNUP SECTION */
-
-.signup-grid{
+.cards{
 display:flex;
 gap:30px;
-margin-top:40px;
-flex-wrap:wrap;
-}
-
-.signup-card{
-flex:1;
-min-width:300px;
-height:320px;
-background-size:cover;
-display:flex;
-align-items:center;
 justify-content:center;
+flex-wrap:wrap;
+margin-top:50px;
 }
 
-.signup-overlay{
-background:rgba(0,0,0,0.6);
+.card{
+background:#0f2a5c;
 padding:30px;
+width:280px;
 border-radius:10px;
+transition:.3s;
 }
 
-/* ABOUT */
+.card:hover{
+transform:translateY(-8px);
+}
 
-.about{
+/* AGENT CTA */
+
+.agent-section{
 display:flex;
 gap:40px;
-align-items:center;
-margin-top:40px;
+justify-content:center;
 flex-wrap:wrap;
 }
 
-.about img{
-width:450px;
+.agent-box{
+position:relative;
+width:500px;
 border-radius:10px;
+overflow:hidden;
 }
 
-/* FEATURES */
-
-.features{
-display:flex;
-gap:30px;
-margin-top:40px;
-flex-wrap:wrap;
+.agent-box img{
+width:100%;
+height:300px;
+object-fit:cover;
+transition:transform .5s;
 }
 
-.feature{
-flex:1;
-background:#112a54;
-padding:30px;
+.agent-box:hover img{
+transform:scale(1.1);
+}
+
+.agent-overlay{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:rgba(0,0,0,.6);
+padding:40px;
 border-radius:10px;
-min-width:250px;
+text-align:center;
 }
 
 footer{
-text-align:center;
 padding:40px;
-background:#07142b;
-margin-top:60px;
+background:#06122a;
+text-align:center;
+margin-top:80px;
 }
 
 </style>
@@ -194,7 +184,6 @@ margin-top:60px;
 
 <body>
 
-<div class="stars"></div>
 
 <!-- NAVBAR -->
 
@@ -205,9 +194,9 @@ margin-top:60px;
 <div>
 
 <a href="index.html">Home</a>
-<a href="find-agents.html">Find Agents</a>
-<a href="agent-signup.html">Agent Sign Up</a>
-<a href="pricing.html">Pricing</a>
+<a href="find-agents/index.html">Find Agents</a>
+<a href="agent-signup/index.html">Agent Sign Up</a>
+<a href="pricing/index.html">Pricing</a>
 
 </div>
 
@@ -216,94 +205,51 @@ margin-top:60px;
 
 <!-- HERO SLIDER -->
 
-<section class="hero">
+<div class="hero">
 
-<div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1560518883-ce09059eeffa');">
+<div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1560185127-6ed189bf02f4')"></div>
 
-<div class="overlay">
+<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c')"></div>
+
+<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d')"></div>
+
+<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1600047509358-9dc75507daeb')"></div>
+
+<div class="hero-overlay">
 
 <h1>Find Trusted Real Estate Agents</h1>
 
-<p>Search professionals in your city</p>
+<p>Search agents worldwide by country, state and city</p>
 
-<div class="search">
-
-<select id="country"></select>
-<select id="state"></select>
-<select id="city"></select>
-
-<button onclick="goToSearch()">Find My Agent</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1570129477492-45c003edd2be');">
-
-<div class="overlay">
-
-<h1>Connect With Top Property Experts</h1>
-
-<p>Find agents ready to help you buy or sell property</p>
-
-</div>
-
-</div>
-
-
-<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1560185127-6ed189bf02f4');">
-
-<div class="overlay">
-
-<h1>Discover Local Professionals</h1>
-
-<p>Search agents by city and location</p>
-
-</div>
-
-</div>
-
-
-<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1501183638710-841dd1904471');">
-
-<div class="overlay">
-
-<h1>Grow Your Real Estate Business</h1>
-
-<p>Join our platform and reach new clients</p>
-
-<a href="agent-signup.html">
-<button>Join As Agent</button>
+<a href="find-agents/index.html">
+<button class="btn">Find My Agent</button>
 </a>
 
 </div>
 
 </div>
 
-</section>
 
+<!-- AGENT SIGNUP -->
 
-<!-- SIGNUP SECTION -->
-
-<section class="section">
+<div class="section">
 
 <h2>Join As A Real Estate Agent</h2>
 
-<div class="signup-grid">
+<div class="agent-section">
 
-<div class="signup-card" style="background-image:url('https://images.unsplash.com/photo-1560185127-6ed189bf02f4');">
+<div class="agent-box">
 
-<div class="signup-overlay">
+<img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa">
+
+<div class="agent-overlay">
 
 <h3>Get More Leads</h3>
 
-<p>List your business and get discovered.</p>
+<p>List your business and get discovered</p>
 
-<a href="agent-signup.html">
-<button>Sign Up</button>
+<a href="agent-signup/index.html">
+<button class="btn">Sign Up</button>
 </a>
 
 </div>
@@ -311,16 +257,18 @@ margin-top:60px;
 </div>
 
 
-<div class="signup-card" style="background-image:url('https://images.unsplash.com/photo-1570129477492-45c003edd2be');">
+<div class="agent-box">
 
-<div class="signup-overlay">
+<img src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c">
+
+<div class="agent-overlay">
 
 <h3>Increase Visibility</h3>
 
-<p>Drive traffic to your website.</p>
+<p>Drive traffic to your website</p>
 
-<a href="pricing.html">
-<button>View Pricing</button>
+<a href="pricing/index.html">
+<button class="btn">View Pricing</button>
 </a>
 
 </div>
@@ -329,58 +277,51 @@ margin-top:60px;
 
 </div>
 
-</section>
+</div>
 
 
 <!-- ABOUT -->
 
-<section class="section">
+<div class="section">
 
 <h2>About Us</h2>
 
-<div class="about">
+<p style="max-width:700px;margin:auto;margin-top:20px">
 
-<img src="https://images.unsplash.com/photo-1501183638710-841dd1904471">
-
-<p>
-
-My Property Agent connects property buyers and sellers with professional real estate agents across the world.
-
-Search by country, state, and city to find trusted experts in your location.
+My Property Agent connects buyers and sellers with professional real estate agents around the world.  
+Search by country, state and city to find the best experts in your location.
 
 </p>
 
 </div>
 
-</section>
-
 
 <!-- FEATURES -->
 
-<section class="section">
+<div class="section">
 
 <h2>Why Use Our Platform</h2>
 
-<div class="features">
+<div class="cards">
 
-<div class="feature">
+<div class="card">
 <h3>Global Directory</h3>
-<p>Agents from multiple countries.</p>
+<p>Agents from multiple countries</p>
 </div>
 
-<div class="feature">
+<div class="card">
 <h3>Smart Location Search</h3>
-<p>Filter by country, state and city.</p>
+<p>Filter by country, state and city</p>
 </div>
 
-<div class="feature">
+<div class="card">
 <h3>Direct Website Visits</h3>
-<p>Connect directly with agents.</p>
+<p>Connect directly with agents</p>
 </div>
 
 </div>
 
-</section>
+</div>
 
 
 <footer>
@@ -395,6 +336,7 @@ Search by country, state, and city to find trusted experts in your location.
 /* HERO SLIDER */
 
 let slides=document.querySelectorAll(".slide")
+
 let index=0
 
 setInterval(()=>{
@@ -405,103 +347,10 @@ index=(index+1)%slides.length
 
 slides[index].classList.add("active")
 
-},5000)
-
-
-/* COUNTRY STATE CITY */
-
-const country=document.getElementById("country")
-const state=document.getElementById("state")
-const city=document.getElementById("city")
-
-async function loadCountries(){
-
-const res=await fetch("https://countriesnow.space/api/v0.1/countries")
-const data=await res.json()
-
-country.innerHTML="<option>Select Country</option>"
-
-data.data.forEach(c=>{
-
-let option=document.createElement("option")
-
-option.value=c.country
-option.textContent=c.country
-
-country.appendChild(option)
-
-})
-
-}
-
-country.addEventListener("change",async()=>{
-
-const res=await fetch("https://countriesnow.space/api/v0.1/countries/states",{
-
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({country:country.value})
-
-})
-
-const data=await res.json()
-
-state.innerHTML=""
-
-data.data.states.forEach(s=>{
-
-let option=document.createElement("option")
-
-option.value=s.name
-option.textContent=s.name
-
-state.appendChild(option)
-
-})
-
-})
-
-state.addEventListener("change",async()=>{
-
-const res=await fetch("https://countriesnow.space/api/v0.1/countries/state/cities",{
-
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({country:country.value,state:state.value})
-
-})
-
-const data=await res.json()
-
-city.innerHTML=""
-
-data.data.forEach(c=>{
-
-let option=document.createElement("option")
-
-option.value=c
-option.textContent=c
-
-city.appendChild(option)
-
-})
-
-})
-
-loadCountries()
-
-
-function goToSearch(){
-
-const c=country.value
-const s=state.value
-const ci=city.value
-
-window.location.href=`find-agents.html?country=${c}&state=${s}&city=${ci}`
-
-}
+},4000)
 
 </script>
+
 
 </body>
 
