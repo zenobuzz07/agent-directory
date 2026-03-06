@@ -5,6 +5,8 @@
 
 <title>Find Agents</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -12,82 +14,109 @@
 body{
 margin:0;
 font-family:Arial;
-background:#0b1d3a;
+background:#0a1a35;
 color:white;
 }
+
+/* NAVBAR */
 
 nav{
 display:flex;
 justify-content:space-between;
 padding:20px 60px;
-background:#08152b;
+background:#07142b;
 }
 
 nav a{
 color:white;
-text-decoration:none;
 margin-left:25px;
+text-decoration:none;
+font-weight:bold;
 }
 
+nav a:hover{
+color:#ff7b00;
+}
+
+/* PAGE */
+
 .container{
-max-width:1100px;
+max-width:1200px;
 margin:auto;
 padding:60px 20px;
 }
 
-h1{
-text-align:center;
-margin-bottom:40px;
-}
+/* SEARCH */
 
 .search{
 display:flex;
-gap:15px;
-justify-content:center;
+gap:10px;
 flex-wrap:wrap;
 margin-bottom:40px;
+justify-content:center;
 }
 
-select,button{
+select{
 padding:12px;
-border-radius:5px;
 border:none;
+border-radius:5px;
+min-width:160px;
 }
 
 button{
 background:#ff7b00;
+border:none;
+padding:12px 20px;
 color:white;
 cursor:pointer;
+border-radius:5px;
+font-weight:bold;
 }
 
-.results{
+/* AGENT GRID */
+
+.grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
 gap:25px;
 }
 
-.agent-card{
+/* AGENT CARD */
+
+.card{
 background:#112a54;
-padding:20px;
 border-radius:10px;
-text-align:center;
+overflow:hidden;
+transition:transform 0.3s;
 }
 
-.agent-card img{
+.card:hover{
+transform:translateY(-8px);
+}
+
+.card img{
 width:100%;
 height:200px;
 object-fit:cover;
-border-radius:10px;
-margin-bottom:15px;
 }
 
-.agent-card a{
-display:inline-block;
+.card-body{
+padding:20px;
+text-align:center;
+}
+
+.card-body h3{
+margin:10px 0;
+}
+
+.visit{
 margin-top:10px;
+display:inline-block;
 background:#ff7b00;
 padding:10px 15px;
 color:white;
 text-decoration:none;
+border-radius:5px;
 }
 
 </style>
@@ -96,6 +125,8 @@ text-decoration:none;
 
 <body>
 
+<!-- NAVBAR -->
+
 <nav>
 
 <div><b>My Property Agent</b></div>
@@ -103,15 +134,18 @@ text-decoration:none;
 <div>
 <a href="index.html">Home</a>
 <a href="find-agents.html">Find Agents</a>
-<a href="#">Agent Sign Up</a>
-<a href="#">Pricing</a>
+<a href="agent-signup.html">Agent Sign Up</a>
+<a href="pricing.html">Pricing</a>
 </div>
 
 </nav>
 
+
 <div class="container">
 
-<h1>Find Real Estate Agents</h1>
+<h1 style="text-align:center;margin-bottom:40px;">Find Real Estate Agents</h1>
+
+<!-- SEARCH -->
 
 <div class="search">
 
@@ -123,7 +157,10 @@ text-decoration:none;
 
 </div>
 
-<div id="results" class="results"></div>
+
+<!-- RESULTS -->
+
+<div id="results" class="grid"></div>
 
 </div>
 
@@ -135,78 +172,86 @@ text-decoration:none;
 const supabaseUrl="https://sfysccrjpadcumqakvbz.supabase.co"
 const supabaseKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmeXNjY3JqcGFkY3VtcWFrdmJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTEyMjAsImV4cCI6MjA4ODI2NzIyMH0.zg-8sziq-2fsbL3LFmGRhSv0m32thTcVS3ZhRb7gn8Y"
 
-const supabase=supabase.createClient(supabaseUrl,supabaseKey)
+const supabase=window.supabase.createClient(supabaseUrl,supabaseKey)
 
 
-/* LOCATION DROPDOWNS */
+/* DROPDOWNS */
 
-const countrySelect=document.getElementById("country")
-const stateSelect=document.getElementById("state")
-const citySelect=document.getElementById("city")
+const country=document.getElementById("country")
+const state=document.getElementById("state")
+const city=document.getElementById("city")
 
 async function loadCountries(){
 
 const res=await fetch("https://countriesnow.space/api/v0.1/countries")
+
 const data=await res.json()
 
-countrySelect.innerHTML="<option>Select Country</option>"
+country.innerHTML="<option>Select Country</option>"
 
 data.data.forEach(c=>{
-const option=document.createElement("option")
+
+let option=document.createElement("option")
+
 option.value=c.country
 option.textContent=c.country
-countrySelect.appendChild(option)
+
+country.appendChild(option)
+
 })
 
 }
 
-countrySelect.addEventListener("change",async()=>{
-
-const country=countrySelect.value
+country.addEventListener("change",async()=>{
 
 const res=await fetch("https://countriesnow.space/api/v0.1/countries/states",{
 
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({country})
+body:JSON.stringify({country:country.value})
 
 })
 
 const data=await res.json()
 
-stateSelect.innerHTML=""
+state.innerHTML=""
 
 data.data.states.forEach(s=>{
-const option=document.createElement("option")
+
+let option=document.createElement("option")
+
 option.value=s.name
 option.textContent=s.name
-stateSelect.appendChild(option)
-})
+
+state.appendChild(option)
 
 })
 
-stateSelect.addEventListener("change",async()=>{
+})
 
-const country=countrySelect.value
-const state=stateSelect.value
+state.addEventListener("change",async()=>{
 
 const res=await fetch("https://countriesnow.space/api/v0.1/countries/state/cities",{
 
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({country,state})
+body:JSON.stringify({country:country.value,state:state.value})
 
 })
 
 const data=await res.json()
 
-citySelect.innerHTML=""
+city.innerHTML=""
 
-data.data.forEach(city=>{
-const option=document.createElement("option")
-option.value=city
-option.textContent=city
-citySelect.appendChild(option)
+data.data.forEach(c=>{
+
+let option=document.createElement("option")
+
+option.value=c
+option.textContent=c
+
+city.appendChild(option)
+
 })
 
 })
@@ -218,28 +263,44 @@ loadCountries()
 
 async function searchAgents(){
 
-const country=countrySelect.value
-const state=stateSelect.value
-const city=citySelect.value
+const c=country.value
+const s=state.value
+const ci=city.value
 
 const {data,error}=await supabase
+
 .from("agents")
+
 .select("*")
-.eq("country",country)
-.eq("state",state)
-.eq("city",city)
+
+.eq("country",c)
+
+.eq("state",s)
+
+.eq("city",ci)
+
+displayAgents(data)
+
+}
+
+
+function displayAgents(agents){
 
 const container=document.getElementById("results")
 
 container.innerHTML=""
 
-data.forEach(agent=>{
+agents.forEach(agent=>{
 
 const card=document.createElement("div")
 
-card.className="agent-card"
+card.className="card"
 
 card.innerHTML=`
+
+<img src="${agent.profile_image || 'https://via.placeholder.com/400'}">
+
+<div class="card-body">
 
 <h3>${agent["Owner Name"]}</h3>
 
@@ -247,13 +308,39 @@ card.innerHTML=`
 
 <p>${agent.city}, ${agent.state}</p>
 
-<a href="${agent.website_url}" target="_blank">Visit Website</a>
+<a class="visit" href="${agent.website_url}" target="_blank">Visit Website</a>
+
+</div>
 
 `
 
 container.appendChild(card)
 
 })
+
+}
+
+
+/* AUTO SEARCH FROM HOME PAGE */
+
+const params=new URLSearchParams(window.location.search)
+
+const c=params.get("country")
+const s=params.get("state")
+const ci=params.get("city")
+
+if(c){
+
+country.value=c
+
+setTimeout(()=>{
+
+state.value=s
+city.value=ci
+
+searchAgents()
+
+},1500)
 
 }
 
